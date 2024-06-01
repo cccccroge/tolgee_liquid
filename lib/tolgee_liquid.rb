@@ -15,7 +15,7 @@ module TolgeeLiquid
       yield(configuration)
     end
 
-    def liquid_registers(options)
+    def registers(options)
       options.slice(:locale, :static_data, :mode)
     end
   end

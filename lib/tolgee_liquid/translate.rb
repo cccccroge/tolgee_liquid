@@ -1,4 +1,5 @@
 require 'net/http'
+require 'message_format'
 
 class Translate
   def initialize
@@ -11,7 +12,6 @@ class Translate
     locale = opts[:locale]
     dev_mode = opts[:mode] == 'development'
     static_data = opts[:static_data]
-
     dict = dev_mode ? get_remote_dict(locale.to_s) : static_data[locale.to_sym]
     value = fetch_translation(dict, name)
     return name if value.nil?
