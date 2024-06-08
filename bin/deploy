@@ -1,0 +1,61 @@
+#!/bin/bash
+
+set -e
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Make sure we are on "main"
+if [ "$current_branch" != "main" ]; then
+  echo "Error: You must be on 'main' to deploy."
+  exit 1
+fi
+
+# Get commits to release
+last_gem_release_commit=$(git rev-parse --abbrev-ref gem_release 2>/dev/null || echo "")
+commits=$(git log --pretty=format:"%h %s" $last_gem_release_commit..HEAD)
+
+if [ -z "$commits" ]; then
+  echo "No new commits to release."
+  exit 0
+fi
+
+# Preview commits
+echo "Commits to be released:"
+while read -r commit_hash commit_message; do
+  pr_title=$(git log -1 --pretty="%b" $commit_hash | sed -n '/^Pull Request Title:/s/^Pull Request Title: //p')
+  echo "$commit_hash $commit_message"
+  if [ -n "$pr_title" ]; then
+    echo "  Pull Request Title: $pr_title"
+  fi
+done <<< "$commits"
+
+# Bump version
+read -p "Bump version (major/minor/patch)? " version_bump
+current_version=$(ruby -r ./lib/tolgee_liquid/version.rb -e "puts TolgeeLiquid::VERSION")
+case "$version_bump" in
+  major)
+    new_version=$(ruby -e "puts Gem::Version.new('$current_version').bump.bump.to_s")
+    ;;
+  minor)
+    new_version=$(ruby -e "puts Gem::Version.new('$current_version').bump.to_s")
+    ;;
+  patch)
+    new_version=$(ruby -e "version = Gem::Version.new('$current_version'); segments = version.segments; segments[-1] += 1; puts segments.join('.')")
+    ;;
+  *)
+    echo "Invalid version bump type."
+    exit 1
+    ;;
+esac
+
+echo "Bumping version from $current_version to $new_version"
+sed -i "s/VERSION = \"$current_version\"/VERSION = \"$new_version\"/" lib/tolgee_liquid/version.rb
+
+# Add commits and pick to gem_release
+git add lib/tolgee_liquid/version.rb
+git add Gemfile.lock
+git commit -m "Bump version to $new_version"
+git checkout gem_release
+git merge --no-ff main
+git push
+git checkout main
