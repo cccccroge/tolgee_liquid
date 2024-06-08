@@ -53,6 +53,7 @@ sed -i "s/VERSION = \"$current_version\"/VERSION = \"$new_version\"/" lib/tolgee
 
 # Add commits and pick to gem_release
 git add lib/tolgee_liquid/version.rb
+bundle install
 git add Gemfile.lock
 git commit -m "Bump version to $new_version" --no-edit
 git push
