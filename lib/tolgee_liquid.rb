@@ -1,14 +1,19 @@
-require "tolgee_liquid/version"
-require "tolgee_liquid/translate"
-require "tolgee_liquid/zero_width_character_encoder"
+# frozen_string_literal: true
 
+require 'tolgee_liquid/version'
+require 'tolgee_liquid/translate'
+require 'tolgee_liquid/zero_width_character_encoder'
+
+# This allow user to configure Tolgee credentials
 module TolgeeLiquid
   class << self
     attr_accessor :configuration
 
+    # rubocop:disable Style/Documentation
     class Configuration
       attr_accessor :api_url, :api_key, :project_id
     end
+    # rubocop:enable Style/Documentation
 
     def configure
       self.configuration ||= Configuration.new
@@ -21,6 +26,7 @@ module TolgeeLiquid
   end
 end
 
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 def with_tolgee(method_name)
   original_method = instance_method(method_name)
   define_method(method_name) do |*args, &fn|
@@ -32,7 +38,7 @@ def with_tolgee(method_name)
       hidden_message = ZeroWidthCharacterEncoder.new.execute(message)
 
       t = Translate.new
-      dict = t.get_remote_dict(locale)
+      dict = t.remote_dict(locale)
       value = t.fetch_translation(dict, args.first)
       return args.first if value.nil?
 
@@ -43,13 +49,15 @@ def with_tolgee(method_name)
     end
   end
 end
+# rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
+# Expose translation method that used in Liquid filters
 module TolgeeFilter
   def t(name, vars = {})
     opts = {
       locale: @context.registers[:locale] || I18n.default_locale,
       mode: @context.registers[:mode] || 'production',
-      static_data: @context.registers[:static_data] || {},
+      static_data: @context.registers[:static_data] || {}
     }
     Translate.new.execute(name, vars, opts)
   end

@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# An string encoder that will transform original message to invisible ASCII characters.
+# See the detail in: https://tolgee.io/blog/2021/12/17/invisible-characters-for-better-localization
 class ZeroWidthCharacterEncoder
   INVISIBLE_CHARACTERS = ["\u200C", "\u200D"].freeze
 
