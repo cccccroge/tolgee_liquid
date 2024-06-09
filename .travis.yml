@@ -13,6 +13,9 @@ script:
   - bundle exec rake spec
   - gem build tolgee_liquid.gemspec
 
+before_deploy:
+  - export TRAVIS_TAG=$(git describe --tags --abbrev=0)
+
 deploy:
   provider: rubygems
   api_key: "$RUBYGEMS_API_KEY"

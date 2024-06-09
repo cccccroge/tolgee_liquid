@@ -56,6 +56,5 @@ git add lib/tolgee_liquid/version.rb
 bundle install
 git add Gemfile.lock
 git commit -m "Bump version to $new_version" --no-edit
-git tag $new_version
-
+git tag v$new_version
 git push
