@@ -1,0 +1,5 @@
+en:
+  hello: Hello
+  hello_with_params: "Hello, %{name}"
+  namespace:
+    morning: Good morning.

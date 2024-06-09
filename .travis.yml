@@ -10,6 +10,7 @@ before_install:
 
 script:
   - bin/setup
+  - bundle exec rubocop
   - bundle exec rake spec
   - gem build tolgee_liquid.gemspec
 
