@@ -34,15 +34,15 @@ def with_tolgee(method_name)
     locale = @context.registers[:locale] || I18n.default_locale
 
     if mode == 'development'
-      message = { k: args.first }.to_json
+      message = { k: args[0] }.to_json
       hidden_message = ZeroWidthCharacterEncoder.new.execute(message)
 
       t = Translate.new
       dict = t.remote_dict(locale)
-      value = t.fetch_translation(dict, args.first)
-      return args.first if value.nil?
+      value = t.fetch_translation(dict, args[0])
+      return args[0] if value.nil?
 
-      translation = MessageFormat.new(value, locale.to_s).format(args.second&.transform_keys(&:to_sym))
+      translation = MessageFormat.new(value, locale.to_s).format(args[1]&.transform_keys(&:to_sym))
       "#{translation}#{hidden_message}"
     else
       original_method.bind(self).call(*args, &fn)
