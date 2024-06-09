@@ -57,4 +57,5 @@ bundle install
 git add Gemfile.lock
 git commit -m "Bump version to $new_version" --no-edit
 git tag v$new_version
+git push origin tag v$new_version
 git push
