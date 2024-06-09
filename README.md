@@ -1,5 +1,7 @@
 # TolgeeLiquid
 
+[![Gem Version](https://badge.fury.io/rb/tolgee_liquid.svg)](https://badge.fury.io/rb/tolgee_liquid) [![Build Status](https://app.travis-ci.com/cccccroge/tolgee_liquid.svg?token=eAALGXbnPjz129Lkqxrb&branch=main)](https://app.travis-ci.com/cccccroge/tolgee_liquid)
+
 A Ruby gem that integrates the [Tolgee Platform](https://tolgee.io/integrations) with Shopify's [Liquid template language](https://github.com/Shopify/liquid).
 
 If you are developing a multilingual web application using the Liquid template language, check out the Tolgee Platform (translation as a service). It enhances your translation workflow, making it more efficient and accurate.
