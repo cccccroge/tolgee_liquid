@@ -49,7 +49,7 @@ case "$version_bump" in
 esac
 
 echo "Bumping version from $current_version to $new_version"
-sed -i "s/VERSION = \"$current_version\"/VERSION = \"$new_version\"/" lib/tolgee_liquid/version.rb
+sed -i "s/VERSION = '$current_version'/VERSION = '$new_version'/" lib/tolgee_liquid/version.rb
 
 # Create commit and tag for new version
 git add lib/tolgee_liquid/version.rb
