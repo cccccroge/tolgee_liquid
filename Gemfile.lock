@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tolgee_liquid (0.1.6)
+    tolgee_liquid (0.1.7)
       message_format (~> 0.0.8)
 
 GEM
