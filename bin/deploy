@@ -11,8 +11,8 @@ if [ "$current_branch" != "main" ]; then
 fi
 
 # Get commits to release
-last_gem_release_commit=$(git rev-parse --abbrev-ref gem_release 2>/dev/null || echo "")
-commits=$(git log --pretty=format:"%h %s" $last_gem_release_commit..HEAD)
+last_release_tag=$(git describe --tags --abbrev=0)
+commits=$(git log --pretty=format:"%h %s" $last_release_tag..HEAD)
 
 if [ -z "$commits" ]; then
   echo "No new commits to release."
@@ -51,13 +51,11 @@ esac
 echo "Bumping version from $current_version to $new_version"
 sed -i "s/VERSION = \"$current_version\"/VERSION = \"$new_version\"/" lib/tolgee_liquid/version.rb
 
-# Add commits and pick to gem_release
+# Create commit and tag for new version
 git add lib/tolgee_liquid/version.rb
 bundle install
 git add Gemfile.lock
 git commit -m "Bump version to $new_version" --no-edit
+git tag $new_version
+
 git push
-git checkout gem_release
-git merge --no-ff main
-git push
-git checkout main

@@ -10,22 +10,15 @@ before_install:
 
 script:
   - bin/setup
+  - bundle exec rake spec
+  - gem build tolgee_liquid.gemspec
 
-jobs:
-  include:
-    - stage: test
-      if: branch != gem_release
-      script:
-        - bundle exec rake spec
-    - stage: publish
-      if: branch = gem_release
-      script:
-        - gem build tolgee_liquid.gemspec
-        - gem_file=$(ls tolgee_liquid-*.gem)
-        - gem push "${gem_file}" --host https://rubygems.org --key "${RUBYGEMS_API_KEY}"
+deploy:
+  provider: rubygems
+  api_key: "$RUBYGEMS_API_KEY"
+  on:
+    tags: true
 
 branches:
   only:
     - main
-    - gem_release
-
